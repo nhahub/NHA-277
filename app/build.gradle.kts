@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 }
-
+val tmdbKey: String? = project.findProperty("TMDB_API_KEY") as String?
 android {
     namespace = "com.mustafa.myapplication"
     compileSdk = 36
@@ -16,6 +16,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "TMDB_API_KEY", "\"${tmdbKey ?: ""}\"")
     }
 
     buildTypes {
