@@ -1,47 +1,34 @@
 package com.mustafa.myapplication
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.mustafa.myapplication.ui.theme.MyApplicationTheme
+import androidx.lifecycle.lifecycleScope
+import com.mustafa.myapplication.Home.HomeRepo
+import com.mustafa.myapplication.network.ApiClient
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            MyApplicationTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+
+        val repo = HomeRepo(ApiClient.api)
+
+        lifecycleScope.launch {
+            try {
+                val result = repo.getPopularMovies(1)
+                if (result.isSuccess) {
+                    val data = result.getOrNull()
+                    Log.d("MainActivity", "✅ Movies fetched: ${data?.results?.size}")
+                    data?.results?.take(5)?.forEach { movie ->
+                        Log.d("MainActivity", "🎬 ${movie.title} (${movie.releaseDate}) ⭐${movie.voteAverage}")
+                    }
+                } else {
+                    Log.e("MainActivity", "❌ Failed: ${result.exceptionOrNull()?.message}")
                 }
+            } catch (e: Exception) {
+                Log.e("MainActivity", "❌ Exception: ${e.message}")
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MyApplicationTheme {
-        Greeting("Android")
     }
 }
