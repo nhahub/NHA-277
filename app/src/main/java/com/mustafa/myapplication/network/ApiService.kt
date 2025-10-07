@@ -10,4 +10,11 @@ interface ApiService {
         @Query("language") language: String = "en-US",
         @Query("page") page: Int = 1
     ): PopularResponse
+
+    @GET("search/movie")
+    suspend fun searchMovies(
+        @Query("query") query : String ,
+        @Query("language") language: String = "en_US" ,
+        @Query("page") page :Int = 1
+    ): PopularResponse
 }
