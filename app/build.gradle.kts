@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 }
+val tmdbKey: String? = project.findProperty("TMDB_API_KEY") as String?
 android {
     namespace = "com.mustafa.myapplication"
     compileSdk = 36
@@ -16,11 +17,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        val tmdbKey: String? = project.findProperty("TMDB_API_KEY") as String?
-
-
-        buildConfigField("String", "TMDB_API_KEY", "\"$tmdbKey\"")
-
+        buildConfigField("String", "TMDB_API_KEY", "\"${tmdbKey ?: ""}\"")
     }
 
     buildTypes {
@@ -41,7 +38,7 @@ android {
     }
     buildFeatures {
         compose = true
-        buildConfig = true
+        buildConfig =true
     }
 }
 
@@ -62,22 +59,11 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation("androidx.fragment:fragment-ktx:1.8.9")
-
-
-    // MVVM Architecture Components
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    implementation(libs.androidx.lifecycle.livedata.ktx) // Optional, but common with ViewModel
-
-    // Networking with Retrofit
-    implementation(libs.retrofit.core)
-    implementation(libs.retrofit.converter.gson)
-    implementation(libs.okhttp.logging.interceptor) // Highly recommended for debugging
-
-    // Coroutines for asynchronous calls
-    implementation(libs.kotlinx.coroutines.android)
-
-
-
-
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
+    implementation("com.github.bumptech.glide:glide:4.15.1")
 }
