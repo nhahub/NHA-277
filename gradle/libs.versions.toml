@@ -1,6 +1,8 @@
 [versions]
 agp = "8.13.0"
 kotlin = "2.2.20"
+agp = "8.12.1"
+kotlin = "2.2.20"
 coreKtx = "1.10.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
@@ -18,6 +20,18 @@ kotlinxCoroutines = "1.8.1"
 # Add these
 lifecycle = "2.8.2"
 activityKtx = "1.9.0"
+
+# Networking
+retrofit = "2.9.0"
+converterGson = "2.9.0"
+okhttp = "4.9.3"
+
+# Coroutines
+kotlinxCoroutines = "1.7.3"
+# Add these
+lifecycle = "2.6.1"
+activityKtx = "1.9.0"
+glide = "4.15.1"
 
 
 [libraries]
