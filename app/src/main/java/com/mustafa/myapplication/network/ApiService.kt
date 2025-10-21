@@ -1,6 +1,8 @@
 package com.mustafa.myapplication.network
 
 import com.mustafa.myapplication.model.PopularResponse
+import com.mustafa.myapplication.model.SearchResponse
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -16,5 +18,5 @@ interface ApiService {
         @Query("query") query : String ,
         @Query("language") language: String = "en_US" ,
         @Query("page") page :Int = 1
-    ): PopularResponse
+    ): Response<SearchResponse>
 }
