@@ -1,9 +1,10 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 }
-val tmdbKey: String? = project.findProperty("TMDB_API_KEY") as String?
 android {
     namespace = "com.mustafa.myapplication"
     compileSdk = 36
@@ -17,7 +18,17 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "TMDB_API_KEY", "\"${tmdbKey ?: ""}\"")
+        val keystoreFile = project.rootProject.file("local.properties")
+        val properties = Properties()
+        if (keystoreFile.exists()) {
+            properties.load(keystoreFile.inputStream())
+        }
+
+        buildConfigField(
+            type = "String",
+            name = "TMDB_API_KEY",
+            value = "\"${properties.getProperty("TMDB_API_KEY") ?: ""}\""
+        )
     }
 
     buildTypes {
