@@ -18,3 +18,10 @@ data class Movie(
     @SerializedName("vote_average") val voteAverage: Double?,
     val popularity: Double?
 )
+
+data class SearchResponse(
+    val page: Int,
+    val results: List<Movie>,
+    @SerializedName("total_results") val totalResults: Int,
+    @SerializedName("total_pages") val totalPages: Int
+)
