@@ -1,7 +1,8 @@
-package com.mustafa.myapplication.Home
+package com.mustafa.myapplication.Home.HomeViewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.mustafa.myapplication.Home.Repo.HomeRepo
 
 class HomeViewModelFactory(private val repository: HomeRepo) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
