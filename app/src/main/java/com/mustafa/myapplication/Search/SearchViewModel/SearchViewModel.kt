@@ -74,9 +74,6 @@ class SearchViewModel(private val searchRepo: SearchRepo) : ViewModel() {
                         _uiState.value = UiSearchState.Success(response)
                     }
                 }
-        }catch (e:IOException) {
-            Log.d(TAG,"Network Error")
-            _uiState.value = UiSearchState.Error("Check your Network connection")
         }
         catch (e:Exception){
             if (isActive){
