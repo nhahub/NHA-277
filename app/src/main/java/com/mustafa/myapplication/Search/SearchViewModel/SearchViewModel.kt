@@ -9,6 +9,7 @@ import java.io.IOException
 import android.util.Log
 import com.mustafa.myapplication.Search.UiSearchState
 import com.mustafa.myapplication.model.Movie
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.isActive
 import retrofit2.HttpException
@@ -58,32 +59,30 @@ class SearchViewModel(private val searchRepo: SearchRepo) : ViewModel() {
             _uiState.value = UiSearchState.Idle
             return
         }
-        searchJob = viewModelScope.launch {
-            try {
+        searchJob = viewModelScope.launch(Dispatchers.IO) {
+
                 Log.d(TAG, "Loading")
                 _uiState.value = UiSearchState.Loading
 
-                Log.d(TAG, "Calling API for : ${trimmedQuery}")
+                Log.d(TAG, "Calling API for : $trimmedQuery")
                 val response = searchRepo.searchMovies(query = trimmedQuery)
-                if (isActive) {
-                    if (response.isEmpty()) {
-                        Log.d(TAG, "No results found")
-                        _uiState.value = UiSearchState.Empty
-                    } else {
-                        Log.d(TAG, "Found ${response.size}")
-                        _uiState.value = UiSearchState.Success(response)
+                when(response){
+                    is UiSearchState.Success<*> -> {
+                       if (response.movies.isEmpty()){
+                           _uiState.emit(UiSearchState.Empty)
+                       }
+                        else{
+                            _uiState.emit(response)
+                       }
                     }
+                    is UiSearchState.Error -> {
+                        _uiState.emit(response)
+                    }
+                    else -> {}
+
                 }
-        }catch (e:IOException) {
-            Log.d(TAG,"Network Error")
-            _uiState.value = UiSearchState.Error("Check your Network connection")
-        }
-        catch (e:Exception){
-            if (isActive){
-                Log.d(TAG,"Something went wrong")
-                _uiState.value = UiSearchState.Error("Something went wrong")
-            }
-        }
+
+
         }
 
     }
