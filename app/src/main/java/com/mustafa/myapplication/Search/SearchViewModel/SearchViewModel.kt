@@ -7,96 +7,99 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.io.IOException
 import android.util.Log
-import com.mustafa.myapplication.Search.SearchState
+import com.mustafa.myapplication.Search.UiSearchState
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.isActive
+import retrofit2.HttpException
 
 private const val TAG = "SearchViewModel"
 
 class SearchViewModel(private val searchRepo: SearchRepo) : ViewModel() {
-    private val _uiState = MutableStateFlow(
-        SearchState(
-            query = "",
-            searchResults = emptyList(),
-            isLoading = false,
-            error = null,
-            searchIntiated = false
-        )
-    )
-    val uiState: StateFlow<SearchState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow<UiSearchState>(UiSearchState.Idle)
+    val uiState: StateFlow<UiSearchState> = _uiState.asStateFlow()
 
-    private val searchQuery = MutableStateFlow("")
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery : StateFlow<String> = _searchQuery.asStateFlow()
     init {
         Log.d(TAG, "SearchViewModel init")
         setUpSearchDebounce()
     }
 
+    private var searchJob : Job? = null
+
     fun onQueryChanged(newQuery: String) {
         Log.d(TAG, "onQueryChanged: $newQuery")
-        searchQuery.value=newQuery
-    }
+        _searchQuery.value=newQuery
 
+        if(newQuery.trim().isEmpty()){
+            _uiState.value = UiSearchState.Idle
+        }
+    }
     @OptIn(FlowPreview::class)
     private fun setUpSearchDebounce(){
         searchQuery.debounce(300)
             .distinctUntilChanged()
             .onEach { query ->
                 Log.d(TAG, "setUpSearchDebounce: $query")
-                _uiState.value = _uiState.value.copy(query = query)
-                performSearch(query)}
+                performSearch(query)
+            }
             .launchIn(viewModelScope)
     }
 
-    private suspend fun performSearch(query: String) {
-        Log.d(TAG, "performSearch: $query")
+    private fun performSearch(query: String) {
+        searchJob?.cancel()
         val trimmedQuery = query.trim()
+        Log.d(TAG, "performSearch: $query")
 
         if (trimmedQuery.isEmpty()) {
             Log.d(TAG, "performSearch: query is empty")
 
-            _uiState.value = _uiState.value.copy(
-                searchIntiated = false,
-                searchResults = emptyList(),
-                isLoading = false,
-                error = null
-            )
+            _uiState.value = UiSearchState.Idle
             return
         }
-        _uiState.value = _uiState.value.copy(
-            isLoading = true,
-            searchIntiated = true,
-            error = null
-        )
-        try {
-            Log.d(TAG, "performSearch: searching for $trimmedQuery")
-            val response = searchRepo.searchMovies(query = trimmedQuery)
-            Log.d(TAG, "performSearch: found ${response.size} movies")
+        searchJob = viewModelScope.launch {
+            try {
+                Log.d(TAG, "Loading")
+                _uiState.value = UiSearchState.Loading
 
-            _uiState.value = _uiState.value.copy(
-                searchResults = response,
-                isLoading = false,
-                error = if (response.isEmpty()) "No movies found" else null
-            )
+                Log.d(TAG, "Calling API for : ${trimmedQuery}")
+                val response = searchRepo.searchMovies(query = trimmedQuery)
+                if (isActive) {
+                    if (response.isEmpty()) {
+                        Log.d(TAG, "No results found")
+                        _uiState.value = UiSearchState.Empty
+                    } else {
+                        Log.d(TAG, "Found ${response.size}")
+                        _uiState.value = UiSearchState.Success(response)
+                    }
+                }
         }catch (e:IOException) {
-            _uiState.value = _uiState.value.copy(
-                searchResults = emptyList(),
-                isLoading = false, error = "Network error. Check your connection."
-            )
+            Log.d(TAG,"Network Error")
+            _uiState.value = UiSearchState.Error("Check your Network connection")
+        }catch (e: HttpException){
+            if (isActive){
+
+            }
+
         }catch (e:Exception){
-            _uiState.value = _uiState.value.copy(
-                searchResults = emptyList(),
-                isLoading = false, error = "Something went wrong: ${e.message}"
-            )
+            if (isActive){
+                Log.d(TAG,"Something went wrong")
+                _uiState.value = UiSearchState.Error("Something went wrong")
+            }
+        }
         }
 
     }
 
     fun searchMovies() {
-        viewModelScope.launch {
-            performSearch(_uiState.value.query)
-        }
+        performSearch(_searchQuery.value)
     }
 
     fun clearSearch(){
-        searchQuery.value=""
+        Log.d(TAG,"Clearing Search")
+        searchJob?.cancel()
+        _searchQuery.value= ""
+        _uiState.value = UiSearchState.Idle
     }
 
 }

@@ -1,12 +1,16 @@
 package com.mustafa.myapplication.Search
 
-sealed class UiSearchState<out T> {
+import com.mustafa.myapplication.model.Movie
 
-    object Idle : UiSearchState<Nothing>() // Have not yet start searching
+sealed class UiSearchState{
 
-    object Empty : UiSearchState<Nothing>() // no Movie list found
+    object Idle : UiSearchState() // Have not yet start searching
 
-    object Loading : UiSearchState<Nothing>() // While getting the list from the network
-    data class Success<T>(val data : T) : UiSearchState<T>() // successfully get the list
-    data class Error(val message : String) : UiSearchState<Nothing>() // error happened
+    object Empty : UiSearchState() // no Movie list found
+
+    object Loading : UiSearchState() // While getting the list from the network
+    data class Success(val movies : List<Movie>) : UiSearchState() // successfully get the list
+    data class Error(val message : String) : UiSearchState() // error happened
 }
+
+data class SearchQuery(val text : String = "")
