@@ -15,7 +15,7 @@ open class DetailsViewModel(
     private val dataSourse: DetailsRemoteDataSource
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<DetailUiState<Movie>>(DetailUiState.Idle)
+    private val _uiState = MutableStateFlow<DetailUiState<Movie>>(DetailUiState.Loading)
     val uiState: StateFlow<DetailUiState<Movie>> = _uiState
     fun getMovieDetails(movieId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
