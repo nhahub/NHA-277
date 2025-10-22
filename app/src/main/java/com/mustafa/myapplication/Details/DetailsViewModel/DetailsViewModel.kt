@@ -2,26 +2,38 @@ package com.mustafa.myapplication.Details.DetailsViewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mustafa.myapplication.Details.DetailUiState
 import com.mustafa.myapplication.Details.DetailsNetwork.DetailsRemoteDataSource
+import com.mustafa.myapplication.Details.DetailsNetwork.DetailsRemoteDataSourcelmpl
+import com.mustafa.myapplication.model.Movie
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 open class DetailsViewModel(
-    private val DataSourse: DetailsRemoteDataSource
+    private val dataSourse: DetailsRemoteDataSource
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(DetailsUiState())
-    val state: StateFlow<DetailsUiState> = _state
+    private val _uiState = MutableStateFlow<DetailUiState<Movie>>(DetailUiState.Idle)
+    val uiState: StateFlow<DetailUiState<Movie>> = _uiState
+    fun getMovieDetails(movieId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _uiState.emit(DetailUiState.Loading)
 
-    fun loadMovieDetails(movieId: Int) {
-        viewModelScope.launch {
-            _state.value = DetailsUiState(isLoading = true)
-            try {
-                val movie = DataSourse.getMovieDetails(movieId)
-                _state.value = DetailsUiState(movie = movie)
-            } catch (e: Exception) {
-                _state.value = DetailsUiState(error = e.message)
+            val response = dataSourse.getMovieDetails(movieId)
+            when (response) {
+                is DetailUiState.Success<*> -> try {
+                    _uiState.emit(response)
+                } catch (e: Exception) {
+                    _uiState.emit(DetailUiState.Error("Something went wrong"))
+
+                }
+
+                is DetailUiState.Error -> _uiState.emit(response)
+                else -> {}
+
+
             }
         }
     }
