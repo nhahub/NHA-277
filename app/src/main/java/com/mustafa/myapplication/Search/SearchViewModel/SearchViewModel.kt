@@ -8,6 +8,7 @@ import kotlinx.coroutines.launch
 import java.io.IOException
 import android.util.Log
 import com.mustafa.myapplication.Search.UiSearchState
+import com.mustafa.myapplication.model.Movie
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.isActive
 import retrofit2.HttpException
@@ -15,8 +16,8 @@ import retrofit2.HttpException
 private const val TAG = "SearchViewModel"
 
 class SearchViewModel(private val searchRepo: SearchRepo) : ViewModel() {
-    private val _uiState = MutableStateFlow<UiSearchState>(UiSearchState.Idle)
-    val uiState: StateFlow<UiSearchState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow<UiSearchState<List<Movie>>>(UiSearchState.Idle)
+    val uiState: StateFlow<UiSearchState<List<Movie>>> = _uiState.asStateFlow()
 
     private val _searchQuery = MutableStateFlow("")
     val searchQuery : StateFlow<String> = _searchQuery.asStateFlow()
@@ -76,12 +77,8 @@ class SearchViewModel(private val searchRepo: SearchRepo) : ViewModel() {
         }catch (e:IOException) {
             Log.d(TAG,"Network Error")
             _uiState.value = UiSearchState.Error("Check your Network connection")
-        }catch (e: HttpException){
-            if (isActive){
-
-            }
-
-        }catch (e:Exception){
+        }
+        catch (e:Exception){
             if (isActive){
                 Log.d(TAG,"Something went wrong")
                 _uiState.value = UiSearchState.Error("Something went wrong")
