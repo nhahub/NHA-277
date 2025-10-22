@@ -1,12 +1,15 @@
-package com.mustafa.myapplication.Home
+package com.mustafa.myapplication.Home.HomeViewModel
 
 import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.mustafa.myapplication.Home.Repo.HomeRepo
 import com.mustafa.myapplication.model.Movie
 import com.mustafa.myapplication.model.PopularResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+
 class HomeViewModel(private val repository: HomeRepo) : ViewModel() {
 
     private val _movies = MutableStateFlow<List<Movie>>(emptyList())
