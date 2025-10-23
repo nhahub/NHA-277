@@ -11,7 +11,6 @@ import retrofit2.http.Path
 interface ApiService {
     @GET("movie/popular")
     suspend fun getPopularMovies(
-        @Query("api_key") apiKey: String = "172eaf4d804a5fd635f8b6741a164b92",
         @Query("language") language: String = "en-US",
         @Query("page") page: Int = 1
     ): PopularResponse
