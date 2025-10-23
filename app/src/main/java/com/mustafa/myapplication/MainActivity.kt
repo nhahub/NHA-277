@@ -5,9 +5,10 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.mustafa.myapplication.Home.HomeRepo
-import com.mustafa.myapplication.Home.HomeViewModel
-import com.mustafa.myapplication.Home.HomeViewModelFactory
+import com.mustafa.myapplication.Home.HomeNetwork.HomeRemoteDataSourceImpl
+import com.mustafa.myapplication.Home.HomeViewModel.HomeViewModel
+import com.mustafa.myapplication.Home.HomeViewModel.HomeViewModelFactory
+import com.mustafa.myapplication.Home.Repo.HomeRepoImpl
 import com.mustafa.myapplication.network.ApiClient
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -15,7 +16,10 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
 
     private val viewModel: HomeViewModel by viewModels {
-        HomeViewModelFactory(HomeRepo(ApiClient.api))
+        HomeViewModelFactory(
+            HomeRepoImpl(HomeRemoteDataSourceImpl(ApiClient.api)
+            )
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -17,6 +17,9 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
+        // ✅ Place this inside defaultConfig, not outside
+        val tmdbKey: String? = project.findProperty("TMDB_API_KEY") as String?
+        buildConfigField("String", "TMDB_API_KEY", "\"${tmdbKey ?: ""}\"")
         val tmdbKey: String? = project.findProperty("TMDB_API_KEY") as String?
 
 
@@ -81,6 +84,8 @@ dependencies {
 
 
 
+
+    // ✅ Retrofit 2, not 3
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
@@ -90,4 +95,5 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.15.1")
 
 
+    implementation("io.coil-kt:coil-compose:2.7.0")
 }
