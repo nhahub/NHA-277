@@ -2,7 +2,7 @@ package com.mustafa.myapplication.Details.DetailsViewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mustafa.myapplication.Details.DetailUiState
+import com.mustafa.myapplication.Details.DetailsUI.DetailUiState
 import com.mustafa.myapplication.Details.DetailsNetwork.DetailsRemoteDataSource
 import com.mustafa.myapplication.model.Movie
 import kotlinx.coroutines.Dispatchers
@@ -31,8 +31,6 @@ open class DetailsViewModel(
 
                 is DetailUiState.Error -> _uiState.emit(response)
                 else -> {}
-
-
             }
         }
     }

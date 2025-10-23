@@ -7,17 +7,20 @@ plugins {
 android {
     namespace = "com.mustafa.myapplication"
     compileSdk = 36
+
     defaultConfig {
         applicationId = "com.mustafa.myapplication"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // ✅ Place this inside defaultConfig, not outside
         val tmdbKey: String? = project.findProperty("TMDB_API_KEY") as String?
         buildConfigField("String", "TMDB_API_KEY", "\"${tmdbKey ?: ""}\"")
     }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -26,18 +29,22 @@ android {
                 "proguard-rules.pro")
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }
+
     buildFeatures {
         compose = true
         buildConfig = true
     }
 }
+
 dependencies {
 
     implementation(libs.androidx.core.ktx)
