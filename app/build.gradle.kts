@@ -1,3 +1,6 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -14,12 +17,12 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // ✅ Place this inside defaultConfig, not outside
-        val tmdbKey: String? = project.findProperty("TMDB_API_KEY") as String?
-        buildConfigField("String", "TMDB_API_KEY", "\"${tmdbKey ?: ""}\"")
+        val props = Properties().apply {
+            load(FileInputStream(rootProject.file("local.properties")))
+        }
+        buildConfigField("String", "TMDB_API_KEY", "\"${props["TMDB_API_KEY"]}\"")
     }
 
     buildTypes {
