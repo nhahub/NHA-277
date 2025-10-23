@@ -16,8 +16,8 @@ import retrofit2.HttpException
 private const val TAG = "SearchViewModel"
 
 class SearchViewModel(private val searchRepo: SearchRepo) : ViewModel() {
-    private val _uiState = MutableStateFlow<UiSearchState<List<Movie>>>(UiSearchState.Idle)
-    val uiState: StateFlow<UiSearchState<List<Movie>>> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow<UiSearchState>(UiSearchState.Idle)
+    val uiState: StateFlow<UiSearchState> = _uiState.asStateFlow()
 
     private val _searchQuery = MutableStateFlow("")
     val searchQuery : StateFlow<String> = _searchQuery.asStateFlow()
@@ -66,7 +66,7 @@ class SearchViewModel(private val searchRepo: SearchRepo) : ViewModel() {
                 Log.d(TAG, "Calling API for : $trimmedQuery")
                 val response = searchRepo.searchMovies(query = trimmedQuery)
                 when(response){
-                    is UiSearchState.Success<*> -> {
+                    is UiSearchState.Success -> {
                        if (response.movies.isEmpty()){
                            _uiState.emit(UiSearchState.Empty)
                        }
@@ -78,23 +78,16 @@ class SearchViewModel(private val searchRepo: SearchRepo) : ViewModel() {
                         _uiState.emit(response)
                     }
                     else -> {}
-
                 }
-
-
         }
-
     }
-
     fun searchMovies() {
         performSearch(_searchQuery.value)
     }
-
     fun clearSearch(){
         Log.d(TAG,"Clearing Search")
         searchJob?.cancel()
         _searchQuery.value= ""
         _uiState.value = UiSearchState.Idle
     }
-
 }

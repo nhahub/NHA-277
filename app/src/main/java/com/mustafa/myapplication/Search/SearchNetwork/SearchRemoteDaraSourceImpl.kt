@@ -5,7 +5,7 @@ import com.mustafa.myapplication.model.Movie
 import com.mustafa.myapplication.network.ApiClient
 
 class SearchRemoteDaraSourceImpl : SearchRemoteDataSource {
-    override suspend fun searchMovies(query : String): UiSearchState<List<Movie>>{
+    override suspend fun searchMovies(query : String): UiSearchState {
         return try {
             val response = ApiClient.api.searchMovies(query = query)
 
