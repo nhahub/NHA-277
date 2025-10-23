@@ -10,7 +10,6 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 import java.util.concurrent.TimeUnit
 private const val BASE_URL = "https://api.themoviedb.org/3/"
-
 object ApiClient {
     private val authInterceptor = Interceptor { chain ->
         val original = chain.request()
