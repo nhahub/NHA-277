@@ -22,21 +22,21 @@ fun SearchScreen(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val query by viewModel.searchQuery.collectAsStateWithLifecycle()
 
-   /* Search Screen
-   OutlinedTextField(
-        value = query,
-        onValueChange = { newQuery ->
-            // This sends the new text back to the ViewModel
-            viewModel.onQueryChanged(newQuery)
-        },
-        label = { Text("Search for movies...") },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        singleLine = true
-    )
+    /* Search Screen
+    OutlinedTextField(
+         value = query,
+         onValueChange = { newQuery ->
+             // This sends the new text back to the ViewModel
+             viewModel.onQueryChanged(newQuery)
+         },
+         label = { Text("Search for movies...") },
+         modifier = Modifier
+             .fillMaxWidth()
+             .padding(16.dp),
+         singleLine = true
+     )
 
-    */
+     */
 
 
     when(state){
@@ -70,7 +70,7 @@ fun MoviesShow(movies : List<Movie>){
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(movies){
-            movie ->
+                movie ->
             Card {
                 Text(movie.title ?: "not found")
             }

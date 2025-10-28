@@ -95,6 +95,6 @@ dependencies {
 
         // Glide (optional, if used outside Compose)
         implementation("com.github.bumptech.glide:glide:4.15.1")
-    }
+        }
 
 }
