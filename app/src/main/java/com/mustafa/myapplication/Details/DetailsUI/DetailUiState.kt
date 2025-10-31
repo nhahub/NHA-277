@@ -1,5 +1,4 @@
-package com.mustafa.myapplication.Details
-
+package com.mustafa.myapplication.Details.DetailsUI
 
 sealed class DetailUiState<out T> {
 
