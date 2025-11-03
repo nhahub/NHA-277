@@ -1,3 +1,6 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -17,9 +20,12 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // ✅ Place this inside defaultConfig, not outside
-        val tmdbKey: String? = project.findProperty("TMDB_API_KEY") as String?
-        buildConfigField("String", "TMDB_API_KEY", "\"${tmdbKey ?: ""}\"")
+        // ✅ Load TMDB_API_KEY from local.properties
+        val localProps = rootProject.file("local.properties")
+        val properties = Properties()
+        properties.load(FileInputStream(localProps))
+        val tmdbKey = properties.getProperty("TMDB_API_KEY") ?: ""
+        buildConfigField("String", "TMDB_API_KEY", "\"$tmdbKey\"")
     }
 
     buildTypes {
@@ -56,6 +62,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.material3)
+//    implementation(libs.androidx.room.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -74,4 +82,16 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
     implementation("com.github.bumptech.glide:glide:4.15.1")
     implementation("io.coil-kt:coil-compose:2.7.0")
+
+    implementation("com.google.code.gson:gson:2.10.1")
+
+    implementation("androidx.compose.material:material-icons-core")
+    implementation("androidx.compose.material:material-icons-extended")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+    implementation("androidx.navigation:navigation-compose:2.7.5")
 }
