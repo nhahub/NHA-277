@@ -4,14 +4,11 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import java.io.IOException
 import android.util.Log
 import com.mustafa.myapplication.Search.UiSearchState
 import com.mustafa.myapplication.model.Movie
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.isActive
-import retrofit2.HttpException
 
 private const val TAG = "SearchViewModel"
 
@@ -26,19 +23,20 @@ class SearchViewModel(private val searchRepo: SearchRepo) : ViewModel() {
         setUpSearchDebounce()
     }
 
+    private var lastResult : List<Movie> = emptyList()
     private var searchJob : Job? = null
 
     fun onQueryChanged(newQuery: String) {
         Log.d(TAG, "onQueryChanged: $newQuery")
         _searchQuery.value=newQuery
 
-        if(newQuery.trim().isEmpty()){
-            _uiState.value = UiSearchState.Idle
+        if(newQuery.trim().isEmpty() && lastResult.isNotEmpty()){
+            _uiState.value = UiSearchState.Success(lastResult)
         }
     }
     @OptIn(FlowPreview::class)
     private fun setUpSearchDebounce(){
-        searchQuery.debounce(300)
+        _searchQuery.debounce(500)
             .distinctUntilChanged()
             .onEach { query ->
                 Log.d(TAG, "setUpSearchDebounce: $query")
@@ -54,10 +52,16 @@ class SearchViewModel(private val searchRepo: SearchRepo) : ViewModel() {
 
         if (trimmedQuery.isEmpty()) {
             Log.d(TAG, "performSearch: query is empty")
-
-            _uiState.value = UiSearchState.Idle
+            if (lastResult.isNotEmpty()){
+                Log.d(TAG,"Last Result")
+                _uiState.value = UiSearchState.Success(lastResult)
+            }else{
+                Log.d(TAG,"There's no last result")
+                _uiState.value = UiSearchState.Idle
+            }
             return
         }
+
         searchJob = viewModelScope.launch(Dispatchers.IO) {
 
                 Log.d(TAG, "Loading")
@@ -71,6 +75,7 @@ class SearchViewModel(private val searchRepo: SearchRepo) : ViewModel() {
                            _uiState.emit(UiSearchState.Empty)
                        }
                         else{
+                            lastResult = response.movies
                             _uiState.emit(response)
                        }
                     }
