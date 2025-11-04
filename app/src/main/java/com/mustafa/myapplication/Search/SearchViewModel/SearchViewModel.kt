@@ -26,20 +26,19 @@ class SearchViewModel(private val searchRepo: SearchRepo) : ViewModel() {
         setUpSearchDebounce()
     }
 
-    private var lastResult : List<Movie> = emptyList()
     private var searchJob : Job? = null
 
     fun onQueryChanged(newQuery: String) {
         Log.d(TAG, "onQueryChanged: $newQuery")
         _searchQuery.value=newQuery
 
-        if(newQuery.trim().isEmpty() && lastResult.isNotEmpty()){
-            _uiState.value = UiSearchState.Success(lastResult)
+        if(newQuery.trim().isEmpty()){
+            _uiState.value = UiSearchState.Idle
         }
     }
     @OptIn(FlowPreview::class)
     private fun setUpSearchDebounce(){
-        _searchQuery.debounce(500)
+        searchQuery.debounce(300)
             .distinctUntilChanged()
             .onEach { query ->
                 Log.d(TAG, "setUpSearchDebounce: $query")
@@ -54,17 +53,11 @@ class SearchViewModel(private val searchRepo: SearchRepo) : ViewModel() {
         Log.d(TAG, "performSearch: $query")
 
         if (trimmedQuery.isEmpty()) {
-            Log.d(TAG, "query is empty")
+            Log.d(TAG, "performSearch: query is empty")
 
-            if (lastResult.isNotEmpty()){
-                Log.d(TAG, "Last results")
-                _uiState.value = UiSearchState.Success(lastResult)
-        } else {
-            Log.d(TAG, "No previous results")
             _uiState.value = UiSearchState.Idle
+            return
         }
-        return
-    }
         searchJob = viewModelScope.launch(Dispatchers.IO) {
 
                 Log.d(TAG, "Loading")
@@ -78,7 +71,6 @@ class SearchViewModel(private val searchRepo: SearchRepo) : ViewModel() {
                            _uiState.emit(UiSearchState.Empty)
                        }
                         else{
-                            lastResult = response.movies
                             _uiState.emit(response)
                        }
                     }
