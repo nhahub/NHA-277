@@ -22,6 +22,7 @@ import com.mustafa.myapplication.Home.HomeUi.HomeScreen
 import com.mustafa.myapplication.Home.HomeViewModel.HomeViewModel
 import com.mustafa.myapplication.Home.HomeViewModel.HomeViewModelFactory
 import com.mustafa.myapplication.Home.Repo.HomeRepoImpl
+import com.mustafa.myapplication.Search.SearchScreen
 import com.mustafa.myapplication.network.ApiClient
 import com.mustafa.myapplication.ui.theme.MyApplicationTheme
 
@@ -54,17 +55,30 @@ fun MainScreen(homeViewModel: HomeViewModel) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
+    val isSearchScreen : Boolean = currentRoute== Screen.Search.route
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            TopAppBar(
-                title = { Text("Popular Movies") },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+
+            if (!isSearchScreen){
+                TopAppBar(
+                    title = { Text("Popular Movies") },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
                 )
-            )
-        },
+            }else{
+                TopAppBar(
+                    title = { Text("Search Movies") },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                )
+            }
+            }
+            ,
         bottomBar = {
             NavigationBar {
                 val currentDestination = navBackStackEntry?.destination
@@ -104,16 +118,8 @@ fun MainScreen(homeViewModel: HomeViewModel) {
                 HomeScreen(viewModel = homeViewModel)
             }
             composable(Screen.Search.route) {
-                // Search screen placeholder - coming soon
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = androidx.compose.ui.Alignment.Center
-                ) {
-                    Text(
-                        text = "Search Coming Soon...",
-                        style = MaterialTheme.typography.headlineSmall
-                    )
-                }
+                SearchScreen()
+
             }
         }
     }
