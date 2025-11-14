@@ -1,4 +1,5 @@
 package com.mustafa.myapplication
+import SearchViewModel
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -22,7 +24,10 @@ import com.mustafa.myapplication.Home.HomeUi.HomeScreen
 import com.mustafa.myapplication.Home.HomeViewModel.HomeViewModel
 import com.mustafa.myapplication.Home.HomeViewModel.HomeViewModelFactory
 import com.mustafa.myapplication.Home.Repo.HomeRepoImpl
+import com.mustafa.myapplication.Search.SearchNetwork.SearchRemoteDaraSourceImpl
+import com.mustafa.myapplication.Search.SearchRepo.SearchRepoImpl
 import com.mustafa.myapplication.Search.SearchScreen
+import com.mustafa.myapplication.Search.SearchViewModel.SearchViewModelFactory
 import com.mustafa.myapplication.network.ApiClient
 import com.mustafa.myapplication.ui.theme.MyApplicationTheme
 
@@ -117,8 +122,13 @@ fun MainScreen(homeViewModel: HomeViewModel) {
             composable(Screen.Home.route) {
                 HomeScreen(viewModel = homeViewModel)
             }
+
             composable(Screen.Search.route) {
-                SearchScreen()
+                val searchDataSource = remember { SearchRemoteDaraSourceImpl() }
+                val searchRepo = remember { SearchRepoImpl(searchDataSource) }
+                val searchViewModel : SearchViewModel = viewModel(factory = SearchViewModelFactory(searchRepo))
+
+                SearchScreen(searchViewModel)
 
             }
         }
