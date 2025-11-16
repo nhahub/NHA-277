@@ -12,7 +12,6 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,20 +21,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import com.mustafa.myapplication.Search.SearchNetwork.SearchRemoteDaraSourceImpl
-import com.mustafa.myapplication.Search.SearchRepo.SearchRepoImpl
-import com.mustafa.myapplication.Search.SearchViewModel.SearchViewModelFactory
+
 import com.mustafa.myapplication.model.Movie
 
 
 @Composable
-fun SearchScreen(){
-    val dataSource = remember { SearchRemoteDaraSourceImpl() }
-    val repo = remember { SearchRepoImpl(dataSource) }
-    val viewModel : SearchViewModel = viewModel(factory = SearchViewModelFactory(repo))
-    
+fun SearchScreen(viewModel: SearchViewModel){
+
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val query by viewModel.searchQuery.collectAsStateWithLifecycle()
 
@@ -130,6 +123,8 @@ fun MovieCard(movie: Movie) {
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(6.dp)
         , onClick = {
+
+
         }
     ) {
         Column(
@@ -182,7 +177,7 @@ fun LoadingScreen(){
 fun ErrorScreen(message : String){
     Box(modifier = Modifier.fillMaxSize(),Alignment.Center){
         Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center){
-            Text(text="Error Occured",
+            Text(text=message,
                 style = MaterialTheme.typography.titleLarge,
                 color = Color.Red,
                 textAlign = TextAlign.Center

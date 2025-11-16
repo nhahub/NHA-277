@@ -8,15 +8,10 @@ class DetailsRepoImpl(
     private val remoteDataSource: DetailsRemoteDataSource
 ) : DetailsRepo {
 
-    // هنا بنحتفظ بالمفضلات مؤقتًا في الذاكرة
     private val favorites = mutableListOf<Movie>()
 
     override suspend fun getMovieDetails(movieId: Int): DetailUiState<Movie> {
-        return try {
-            remoteDataSource.getMovieDetails(movieId)
-        } catch (e: Exception) {
-            DetailUiState.Error(e.message ?: "Unknown error occurred")
-        }
+        return remoteDataSource.getMovieDetails(movieId)
     }
 
     override suspend fun addToFavorites(movie: Movie) {
@@ -29,5 +24,7 @@ class DetailsRepoImpl(
         favorites.removeAll { it.id == movieId }
     }
 
-    fun isFavorite(movieId: Int): Boolean = favorites.any { it.id == movieId }
+    override suspend fun isFavorite(movieId: Int): Boolean {
+        return favorites.any { it.id == movieId }
+    }
 }

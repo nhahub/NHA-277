@@ -13,20 +13,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.layout.ContentScale
 import coil.compose.rememberAsyncImagePainter
-import com.mustafa.myapplication.Details.DetailsUI.DetailUiState
 import com.mustafa.myapplication.Details.DetailsViewModel.DetailsViewModel
 import com.mustafa.myapplication.model.Movie
-
 
 @Composable
 fun DetailsScreen(
     movieId: Int,
-    hiltViewModel: DetailsViewModel,
-    viewModel: DetailsViewModel = hiltViewModel
+    viewModel: DetailsViewModel
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    // نبدأ بجلب التفاصيل
     LaunchedEffect(movieId) {
         viewModel.getMovieDetails(movieId)
     }
@@ -88,18 +84,24 @@ fun MovieDetailsView(movie: Movie, viewModel: DetailsViewModel) {
                 .fillMaxWidth()
                 .height(400.dp)
         )
+
         Spacer(modifier = Modifier.height(16.dp))
+
         Text(
             text = movie.title ?: "No Title",
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold
         )
+
         Spacer(modifier = Modifier.height(8.dp))
+
         Text(
-            text = "Rating: ${movie.voteAverage ?: "N/A"}",
+            text = "⭐ Rating: ${movie.voteAverage ?: "N/A"}",
             style = MaterialTheme.typography.bodyLarge
         )
+
         Spacer(modifier = Modifier.height(16.dp))
+
         Text(
             text = movie.overview ?: "No Description Available",
             style = MaterialTheme.typography.bodyMedium,
@@ -107,6 +109,7 @@ fun MovieDetailsView(movie: Movie, viewModel: DetailsViewModel) {
         )
 
         Spacer(modifier = Modifier.height(24.dp))
+
         Button(
             onClick = {
                 isFavorite = !isFavorite
@@ -131,5 +134,4 @@ fun MovieDetailsView(movie: Movie, viewModel: DetailsViewModel) {
             )
         }
     }
-
 }
