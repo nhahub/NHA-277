@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.2.21"
 }
 
 android {
@@ -13,19 +14,18 @@ android {
 
     defaultConfig {
         applicationId = "com.mustafa.myapplication"
-        minSdk = 24
+        minSdk = 24     // 👈 change this to 21 or higher
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // ✅ Load TMDB_API_KEY from local.properties
-        val localProps = rootProject.file("local.properties")
-        val properties = Properties()
-        properties.load(FileInputStream(localProps))
-        val tmdbKey = properties.getProperty("TMDB_API_KEY") ?: ""
-        buildConfigField("String", "TMDB_API_KEY", "\"$tmdbKey\"")
+        val props = Properties().apply {
+            load(FileInputStream(rootProject.file("local.properties")))
+        }
+        buildConfigField("String", "TMDB_API_KEY", "\"${props["TMDB_API_KEY"]}\"")
     }
+
 
     buildTypes {
         release {
@@ -61,8 +61,6 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.material3)
-    implementation(libs.androidx.navigation.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -83,17 +81,29 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.7.0")
 
 
-    // Layouts, Icons, Graphics
-    implementation("androidx.compose.foundation:foundation")
-    implementation("androidx.compose.material:material-icons-extended")
+    // For Navigation (NavHost, rememberNavController, etc.)
+    implementation("androidx.navigation:navigation-compose:2.8.0")
+    implementation("androidx.navigation:navigation-runtime-ktx:2.8.0")
+    implementation("androidx.navigation:navigation-common-ktx:2.8.0")
+
+// Required for typed destinations
+    implementation("androidx.navigation:navigation-compose:2.8.0-beta01")
 
 
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.6")
+    // For ViewModel (ViewModelProvider, viewModel() composable)
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.2")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
+    // For extended icons (like .Home and .Search)
+    implementation("androidx.compose.material:material-icons-extended:1.6.7")
 
-    // Material icons + extended
-    implementation("androidx.compose.material:material-icons-extended")
+    implementation("androidx.compose.foundation:foundation:1.7.0")
+    implementation("androidx.compose.material3:material3:1.3.0")
+    implementation("androidx.compose.ui:ui:1.7.0")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.7.0")
+
+    implementation("io.coil-kt:coil-compose:2.7.0")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+
 
 }

@@ -1,7 +1,6 @@
 package com.mustafa.myapplication.Search.SearchNetwork
 
-import com.mustafa.myapplication.Search.UiSearchState
-import com.mustafa.myapplication.model.Movie
+import com.mustafa.myapplication.Search.SearchUI.UiSearchState
 import com.mustafa.myapplication.network.ApiClient
 
 class SearchRemoteDaraSourceImpl : SearchRemoteDataSource {
