@@ -1,4 +1,4 @@
-package com.mustafa.myapplication.Search
+package com.mustafa.myapplication.Search.SearchUI
 
 import com.mustafa.myapplication.model.Movie
 

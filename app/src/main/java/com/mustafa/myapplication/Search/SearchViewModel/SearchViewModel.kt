@@ -5,7 +5,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import android.util.Log
-import com.mustafa.myapplication.Search.UiSearchState
+import com.mustafa.myapplication.Search.SearchUI.UiSearchState
 import com.mustafa.myapplication.model.Movie
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
