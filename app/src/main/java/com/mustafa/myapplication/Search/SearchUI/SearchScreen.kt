@@ -1,4 +1,4 @@
-package com.mustafa.myapplication.Search
+package com.mustafa.myapplication.Search.SearchUI
 
 import SearchViewModel
 import androidx.compose.foundation.background
@@ -21,13 +21,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 
 import com.mustafa.myapplication.model.Movie
+import com.mustafa.myapplication.ui.theme.Routes
 
 
 @Composable
-fun SearchScreen(viewModel: SearchViewModel){
+fun SearchScreen(viewModel: SearchViewModel , navController: NavController){
 
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val query by viewModel.searchQuery.collectAsStateWithLifecycle()
@@ -48,7 +50,7 @@ Column(Modifier.fillMaxSize()) {
 
         is UiSearchState.Success -> {
             val movieList = (state as UiSearchState.Success).movies
-            MoviesShow(movieList )
+            MoviesShow(movieList ,navController )
         }
         is UiSearchState.Loading -> LoadingScreen()
     }
@@ -100,7 +102,7 @@ fun ScreenMessage(text : String){
 }
 
 @Composable
-fun MoviesShow(movies : List<Movie>){
+fun MoviesShow(movies : List<Movie> , navController: NavController){
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         contentPadding = PaddingValues(8.dp),
@@ -108,14 +110,14 @@ fun MoviesShow(movies : List<Movie>){
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(movies){
-                movie -> MovieCard(movie)
+                movie -> MovieCard(movie , navController)
         }
     }
 }
 
 
 @Composable
-fun MovieCard(movie: Movie) {
+fun MovieCard(movie: Movie , navController: NavController) {
     Card(
         modifier = Modifier
             .padding(8.dp)
@@ -123,8 +125,7 @@ fun MovieCard(movie: Movie) {
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(6.dp)
         , onClick = {
-
-
+            navController.navigate(Routes.Details(movieId =movie.id))
         }
     ) {
         Column(

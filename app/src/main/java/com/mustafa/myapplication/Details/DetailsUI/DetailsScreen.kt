@@ -76,8 +76,9 @@ fun MovieDetailsView(movie: Movie, viewModel: DetailsViewModel) {
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        // هنا التعديل: استخدم الرابط الكامل للصورة
         Image(
-            painter = rememberAsyncImagePainter(movie.posterPath),
+            painter = rememberAsyncImagePainter("https://image.tmdb.org/t/p/w500${movie.posterPath}"),
             contentDescription = movie.title,
             contentScale = ContentScale.Crop,
             modifier = Modifier
