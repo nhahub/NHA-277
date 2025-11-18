@@ -67,7 +67,6 @@ fun ErrorView(message: String) {
 @Composable
 fun MovieDetailsView(movie: Movie, viewModel: DetailsViewModel) {
     val scrollState = rememberScrollState()
-    var isFavorite by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -109,30 +108,5 @@ fun MovieDetailsView(movie: Movie, viewModel: DetailsViewModel) {
             textAlign = TextAlign.Justify
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Button(
-            onClick = {
-                isFavorite = !isFavorite
-                if (isFavorite) {
-                    viewModel.addToFavorites(movie)
-                } else {
-                    viewModel.removeFromFavorites(movie)
-                }
-            },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (isFavorite)
-                    MaterialTheme.colorScheme.primary.copy(alpha = 0.7f)
-                else
-                    MaterialTheme.colorScheme.primary
-            ),
-            modifier = Modifier.fillMaxWidth(0.8f)
-        ) {
-            Text(
-                text = if (isFavorite) "❤️ Added to Favorites" else "♡ Add to Favorites",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onPrimary
-            )
-        }
     }
 }
