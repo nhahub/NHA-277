@@ -1,4 +1,4 @@
-package com.mustafa.myapplication.ui.theme
+package com.mustafa.myapplication
 
 import kotlinx.serialization.Serializable
 

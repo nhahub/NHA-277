@@ -221,7 +221,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.mustafa.myapplication.Home.HomeViewModel.HomeViewModel
 import com.mustafa.myapplication.model.Movie
-import com.mustafa.myapplication.ui.theme.Routes
+import com.mustafa.myapplication.Routes
 
 /**
  * Main Home Screen that displays popular movies

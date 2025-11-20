@@ -25,7 +25,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 
 import com.mustafa.myapplication.model.Movie
-import com.mustafa.myapplication.ui.theme.Routes
+import com.mustafa.myapplication.Routes
 
 
 @Composable
