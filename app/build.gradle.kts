@@ -69,41 +69,34 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    // ✅ Retrofit 2, not 3
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("com.squareup.okhttp3:okhttp:4.9.3")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.gson)
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
-    implementation("com.github.bumptech.glide:glide:4.15.1")
-    implementation("io.coil-kt:coil-compose:2.7.0")
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging)
+
+    implementation(libs.coroutines.android)
+    implementation(libs.lifecycle.viewmodel.ktx)
+
+    implementation(libs.glide)
+    implementation(libs.coil.compose)
+
+    implementation(libs.navigation.compose)
+    implementation(libs.navigation.runtime)
+    implementation(libs.navigation.common)
+    implementation(libs.navigation.compose.beta)
+
+    implementation(libs.lifecycle.viewmodel.compose)
+
+    implementation(libs.compose.icons.extended)
+    implementation(libs.compose.foundation)
+    implementation(libs.compose.ui)
+    implementation(libs.compose.ui.tooling.preview)
+
+    implementation(libs.material3)
+    implementation(libs.kotlinx.serialization.json)
 
 
-    // For Navigation (NavHost, rememberNavController, etc.)
-    implementation("androidx.navigation:navigation-compose:2.8.0")
-    implementation("androidx.navigation:navigation-runtime-ktx:2.8.0")
-    implementation("androidx.navigation:navigation-common-ktx:2.8.0")
-
-// Required for typed destinations
-    implementation("androidx.navigation:navigation-compose:2.8.0-beta01")
-
-
-    // For ViewModel (ViewModelProvider, viewModel() composable)
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.2")
-
-    // For extended icons (like .Home and .Search)
-    implementation("androidx.compose.material:material-icons-extended:1.6.7")
-
-    implementation("androidx.compose.foundation:foundation:1.7.0")
-    implementation("androidx.compose.material3:material3:1.3.0")
-    implementation("androidx.compose.ui:ui:1.7.0")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.7.0")
-
-    implementation("io.coil-kt:coil-compose:2.7.0")
-
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
 
 
 }

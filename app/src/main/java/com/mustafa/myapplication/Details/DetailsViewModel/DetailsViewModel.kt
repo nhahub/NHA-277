@@ -35,18 +35,4 @@ class DetailsViewModel(
             }
         }
     }
-
-    fun addToFavorites(movie: Movie) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repo.addToFavorites(movie)
-            println("✅ Added ${movie.title} to favorites ❤️")
-        }
-    }
-
-    fun removeFromFavorites(movie: Movie) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repo.removeFromFavorites(movie.id)
-            println("❌ Removed ${movie.title} from favorites 💔")
-        }
-    }
 }
