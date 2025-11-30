@@ -8,6 +8,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import com.mustafa.myapplication.Home.HomeNetwork.HomeRemoteDataSourceImpl
 import com.mustafa.myapplication.Home.HomeViewModel.HomeViewModel
 import com.mustafa.myapplication.Home.HomeViewModel.HomeViewModelFactory
@@ -39,7 +40,10 @@ class HomeFragment : Fragment() {
 
             setContent {
                 MyApplicationTheme {
-                    HomeScreen(viewModel = viewModel)
+                    HomeScreen(
+                        viewModel = viewModel,
+                        navController = findNavController()
+                    )
                 }
             }
         }

@@ -217,9 +217,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.mustafa.myapplication.Home.HomeViewModel.HomeViewModel
 import com.mustafa.myapplication.model.Movie
+import com.mustafa.myapplication.Routes
 
 /**
  * Main Home Screen that displays popular movies
@@ -227,6 +229,7 @@ import com.mustafa.myapplication.model.Movie
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel,
+    navController: NavController,
     modifier: Modifier = Modifier
 ) {
     // Collect StateFlow as Compose State
@@ -249,7 +252,10 @@ fun HomeScreen(
             }
             // Show movies grid when we have movies
             movies.isNotEmpty() -> {
-                MoviesGrid(movies = movies)
+                MoviesGrid(
+                    movies = movies,
+                    navController = navController
+                )
             }
             // Empty state
             else -> {
@@ -321,7 +327,10 @@ fun EmptyState() {
  * Grid of movie cards
  */
 @Composable
-fun MoviesGrid(movies: List<Movie>) {
+fun MoviesGrid(
+    movies: List<Movie>,
+    navController: NavController
+)  {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         contentPadding = PaddingValues(8.dp),
@@ -332,7 +341,7 @@ fun MoviesGrid(movies: List<Movie>) {
             MovieCard(
                 movie = movie,
                 onClick = {
-                    // TODO: Navigate to movie details
+                    navController.navigate(Routes.Details(movieId = movie.id))
                 }
             )
         }

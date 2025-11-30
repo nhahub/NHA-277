@@ -12,5 +12,3 @@ sealed class UiSearchState{
     data class Success(val movies :  List<Movie>) : UiSearchState() // successfully get the list
     data class Error(val message : String) : UiSearchState() // error happened
 }
-
-data class SearchQuery(val text : String = "")
