@@ -14,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId = "com.mustafa.myapplication"
-        minSdk = 24     // 👈 change this to 21 or higher
+        minSdk = 24
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
