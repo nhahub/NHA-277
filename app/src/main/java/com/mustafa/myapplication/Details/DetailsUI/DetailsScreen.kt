@@ -33,7 +33,7 @@ fun DetailsScreen(
     ) {
         when (val state = uiState) {
             is DetailUiState.Loading -> LoadingView()
-            is DetailUiState.Success -> MovieDetailsView(state.data, viewModel)
+            is DetailUiState.Success -> MovieDetailsView(state.data)
             is DetailUiState.Error -> ErrorView(state.message)
         }
     }
@@ -65,7 +65,7 @@ fun ErrorView(message: String) {
 }
 
 @Composable
-fun MovieDetailsView(movie: Movie, viewModel: DetailsViewModel) {
+fun MovieDetailsView(movie: Movie) {
     val scrollState = rememberScrollState()
 
     Column(
